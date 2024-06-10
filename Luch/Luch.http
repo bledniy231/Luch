@@ -1,0 +1,6 @@
+@Luch_HostAddress = http://localhost:5131
+
+GET {{Luch_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
