@@ -1,7 +1,8 @@
 ﻿namespace Luch.Contract.Events
 {
-	public class DownloadCompletedEvent
+	public interface IDownloadFailedEvent
 	{
 		public Guid CorrelationId { get; set; }
+		public string FailedMessage { get; set; }
 	}
 }

@@ -1,7 +1,8 @@
 ﻿using Luch.StateMachine.Logger;
-using Luch.StateMachine.Models;
+using Luch.StateMachine.Options;
 using Luch.StateMachine.States;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -9,9 +10,13 @@ namespace Luch.StateMachine
 {
 	internal class Program
 	{
-		async static void Main(string[] args)
+		static void Main(string[] args)
 		{
 			var host = Host.CreateDefaultBuilder(args)
+				.ConfigureAppConfiguration((ctx, cfg) =>
+				{
+					cfg.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+				})
 				.ConfigureServices((ctx, services) =>
 				{
 					services.AddMassTransit(cfg =>
@@ -21,12 +26,12 @@ namespace Luch.StateMachine
 					})
 					.AddMassTransitHostedService();
 
-					services.Configure<StatesLoggerConfigModel>(ctx.Configuration.GetSection("Logger"));
+					services.Configure<StatesLoggerOptions>(ctx.Configuration.GetSection("Logger"));
 					services.AddSingleton<IStatesLogger, StatesLogger>();
 				})
 				.Build();
 
-			await host.RunAsync();
+			host.RunAsync().GetAwaiter().GetResult();
 		}
 	}
 }

@@ -13,4 +13,9 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Luch.Contract\Luch.Contract.csproj" />
+      <ProjectReference Include="..\Luch.StateMachine\Luch.StateMachine.csproj" />
+    </ItemGroup>
+
 </Project>

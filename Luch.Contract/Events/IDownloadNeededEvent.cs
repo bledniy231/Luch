@@ -1,6 +1,6 @@
-﻿namespace Luch.Contract.Requests
+﻿namespace Luch.Contract.Events
 {
-	public class DownloadRequest
+	public interface IDownloadNeededEvent
 	{
 		public Guid CorrelationId { get; set; }
 		public string FileUrl { get; set; }

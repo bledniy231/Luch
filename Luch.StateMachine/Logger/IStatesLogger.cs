@@ -1,9 +1,9 @@
 ﻿namespace Luch.StateMachine.Logger
 {
-	internal interface IStatesLogger
+	public interface IStatesLogger
 	{
-		void LogState(string state);
-		void LogTransition(string fromState, string toState);
+		void LogState(Guid correlationId, string state);
+		void LogTransition(Guid correlationId, string fromState, string toState);
 		void LogError(string message);
 		void LogInformation(string message);
 		void LogWarning(string message);

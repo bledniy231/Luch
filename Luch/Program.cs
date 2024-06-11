@@ -1,3 +1,6 @@
+using Luch.StateMachine;
+using Luch.StateMachine.Consumers;
+using Luch.StateMachine.States;
 using MassTransit;
 
 namespace Luch;
@@ -8,30 +11,20 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddAuthorization();
-		builder.Services.AddMassTransit(x =>
+        builder.Services.AddControllers();
+		builder.Services.AddAuthorization();
+		builder.Services.AddMassTransit(cfg =>
 		{
-			x.AddSagaStateMachine<DownloadStateMachine, DownloadState>()
-				.InMemoryRepository();
-
-			x.UsingRabbitMq((context, cfg) =>
-			{
-				cfg.Host("rabbitmq://localhost", h =>
-				{
-					h.Username("guest");
-					h.Password("guest");
-				});
-
-				cfg.ConfigureEndpoints(context);
-			});
-		});
-
-		builder.Services.AddMassTransitHostedService();
+			cfg.AddConsumer<DownloadHandledConsumer>();
+			cfg.UsingRabbitMq((ctx, cfg) => cfg.ConfigureEndpoints(ctx));
+		})
+		.AddMassTransitHostedService();
 
 		builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+		builder.Services.AddLogging(configure => configure.AddConsole());
 
-        var app = builder.Build();
+		var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
         {
@@ -42,6 +35,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+
+        app.MapControllers();
 
         app.Run();
     }
